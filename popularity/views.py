@@ -29,6 +29,7 @@ class PopularityMixin(object):
 
         return response
 
-    def get_hitcount_for(self, obj):
+    @classmethod
+    def get_hitcount_for(cls, obj):
         opts, object_id = obj._meta, obj.pk
         return HitCountJob().get(opts.app_label, opts.module_name, object_id)

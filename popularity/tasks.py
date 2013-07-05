@@ -11,8 +11,8 @@ from hitcount.models import Hit, HitCount, BlacklistIP, BlacklistUserAgent
 
 
 @task(ignore_result=True)
-def update_hitcount(session_key, ip_address, user_agent, username, \
-                        app_label, model, object_id):
+def update_hitcount(session_key, ip_address, user_agent, username,
+                    app_label, model, object_id):
 
     try:
         user = User.objects.get(username=username)
@@ -46,13 +46,13 @@ def update_hitcount(session_key, ip_address, user_agent, username, \
             return False
 
     # create a generic Hit object with request data
-    hit = Hit(session=session_key, hitcount=hitcount, ip=ip_address, \
-                  user_agent=user_agent)
+    hit = Hit(session=session_key, hitcount=hitcount, ip=ip_address,
+              user_agent=user_agent)
 
     # first, use a user's authentication to see if they made an earlier hit
     if user.is_authenticated():
         if not qs.filter(user=user, hitcount=hitcount):
-            hit.user = user # associate this hit with a user
+            hit.user = user  # associate this hit with a user
             hit.save()
 
             return True
