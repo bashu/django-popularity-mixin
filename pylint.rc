@@ -6,4 +6,13 @@ const-rgx=(([A-Z_][A-Z0-9_]*)|([a-z_][a-z0-9_]*)|(__.*__)|register|urlpatterns)$
 good-names=_,i,j,f,k,e,u,qs,pk,setUp,tearDown
 
 [MESSAGES CONTROL]
-disable=C0111,I0011,R0903,R0904,R0924,W0232
+disable=C0111,I0011,R0903,R0904,R0924,W0212,W0232
+
+[VARIABLES]
+dummy-variables-rgx=_|created|sender
+
+[TYPECHECK]
+generated-members=objects,context,DoesNotExist,_meta,id,pk
+
+[DESIGN]
+max-args=10
