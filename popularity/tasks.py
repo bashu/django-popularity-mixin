@@ -81,4 +81,4 @@ class HitCountJob(Job):
             for extra_items in items[1:]:
                 extra_items.delete()
 
-        return {'total': obj.hits, 'today': obj.hits_in_last(**{'days': 1})}
+        return {'total': obj.hits, 'today': obj.hits_in_last(days=1)}

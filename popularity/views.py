@@ -17,15 +17,15 @@ class PopularityMixin(object):
             if not request.session.session_key:
                 request.session.save()
 
-            update_hitcount.delay(**{
-                    'session_key': request.session.session_key,
-                    'ip_address': get_ip(request),
-                    'user_agent': request.META.get('HTTP_USER_AGENT', '')[:255],
-                    'username': u.username if u.is_authenticated() else None,
-                    'app_label': opts.app_label,
-                    'model': opts.module_name,
-                    'object_id': self.object_id,
-                    })
+            update_hitcount.delay(
+                session_key=request.session.session_key,
+                ip_address=get_ip(request),
+                user_agent=request.META.get('HTTP_USER_AGENT', '')[:255],
+                username=u.username if u.is_authenticated() else None,
+                app_label=opts.app_label,
+                model=opts.module_name,
+                object_id=self.object_id,
+                )
 
         return response
 
