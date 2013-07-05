@@ -7,18 +7,22 @@ from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 from celery.task import task
 from cacheback.base import Job
-from hitcount.models import Hit, HitCount as HC, BlacklistIP, BlacklistUserAgent
+from hitcount.models import Hit, HitCount, BlacklistIP, BlacklistUserAgent
 
 
 @task(ignore_result=True)
-def update_hitcount(session_key, ip_address, user_agent, username, app_label, model, object_id):
+def update_hitcount(session_key, ip_address, user_agent, username, \
+                        app_label, model, object_id):
+
     try:
         user = User.objects.get(username=username)
     except ObjectDoesNotExist:
         user = AnonymousUser()
 
-    hitcount, created = HC.objects.get_or_create(
-        content_type=ContentType.objects.get(app_label=app_label, model=model), object_pk=object_id)
+    ctype = ContentType.objects.get(app_label=app_label, model=model)
+
+    hitcount, created = HitCount.objects.get_or_create(
+        content_type=ctype, object_pk=object_id)
 
     hits_per_ip_limit = getattr(settings, 'HITCOUNT_HITS_PER_IP_LIMIT', 0)
     exclude_user_group = getattr(settings, 'HITCOUNT_EXCLUDE_USER_GROUP', None)
@@ -42,7 +46,8 @@ def update_hitcount(session_key, ip_address, user_agent, username, app_label, mo
             return False
 
     # create a generic Hit object with request data
-    hit = Hit(session=session_key, hitcount=hitcount, ip=ip_address, user_agent=user_agent)
+    hit = Hit(session=session_key, hitcount=hitcount, ip=ip_address, \
+                  user_agent=user_agent)
 
     # first, use a user's authentication to see if they made an earlier hit
     if user.is_authenticated():
@@ -62,14 +67,16 @@ def update_hitcount(session_key, ip_address, user_agent, username, app_label, mo
     return False
 
 
-class HitCount(Job):
+class HitCountJob(Job):
 
     def fetch(self, app_label, model, object_id):
         ctype = ContentType.objects.get(app_label=app_label, model=model)
         try:
-            obj, created = HC.objects.get_or_create(content_type=ctype, object_pk=object_id)
+            obj, created = HitCount.objects.get_or_create(
+                content_type=ctype, object_pk=object_id)
         except MultipleObjectsReturned:
-            items = HitCount.objects.all().filter(content_type=ctype, object_pk=object_id)
+            items = HitCount.objects.filter(
+                content_type=ctype, object_pk=object_id)
             obj = items[0]
             for extra_items in items[1:]:
                 extra_items.delete()

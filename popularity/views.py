@@ -2,9 +2,7 @@
 
 from django.conf import settings
 
-from tasks import update_hitcount, HitCount
-
-__all__ = ['PopularityMixin']
+from .tasks import update_hitcount, HitCountJob
 
 
 class PopularityMixin(object):
@@ -14,18 +12,23 @@ class PopularityMixin(object):
         if getattr(settings, 'USE_HITCOUNT', False):
             from hitcount.utils import get_ip
 
-            opts, object_id = self.object._meta, self.object.pk
+            opts, u = self.object._meta, request.user
 
             if not request.session.session_key:
                 request.session.save()
 
-            session_key, ip_address = request.session.session_key, get_ip(request)
-            username = request.user.username if request.user.is_authenticated() else None
-            user_agent = request.META.get('HTTP_USER_AGENT', '')[:255]
+            update_hitcount.delay(**{
+                    'session_key': request.session.session_key,
+                    'ip_address': get_ip(request),
+                    'user_agent': request.META.get('HTTP_USER_AGENT', '')[:255],
+                    'username': u.username if u.is_authenticated() else None,
+                    'app_label': opts.app_label,
+                    'model': opts.module_name,
+                    'object_id': self.object_id,
+                    })
 
-            update_hitcount.delay(session_key, ip_address, user_agent, username, opts.app_label, opts.module_name, object_id)
         return response
 
     def get_hitcount_for(self, obj):
         opts, object_id = obj._meta, obj.pk
-        return HitCount().get(opts.app_label, opts.module_name, object_id)
+        return HitCountJob().get(opts.app_label, opts.module_name, object_id)
