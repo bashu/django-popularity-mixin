@@ -10,5 +10,6 @@ from .tasks import HitCountJob
 
 @receiver(post_save, sender=Hit)
 def invalidate(sender, instance, **kwargs):
-    opts, object_id = instance._meta, instance.pk,
-    HitCountJob().invalidate(opts.app_label, opts.module_name, object_id)
+    if 'created' in kwargs and kwargs['created'] is True:
+        opts, object_id = instance._meta, instance.pk,
+        HitCountJob().invalidate(opts.app_label, opts.module_name, object_id)
