@@ -18,7 +18,7 @@ class PopularityMixinTest(TestCase):
     def tearDown(self):
         cache.clear()
 
-    def test_default(self):
+    def test_anonymous(self):
         opts, object_id = self.object._meta, self.object.pk
 
         hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
@@ -34,7 +34,41 @@ class PopularityMixinTest(TestCase):
         hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
-    def test_context(self):
+        # second hit
+        self.client.get(reverse('test_detail', args=[object_id]))
+
+        cache.clear()  # clear cache
+
+        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        self.assertEqual(hits['total'], 1)  # returns fresh results
+
+    def test_authenticated(self):
+        self.client.login(username='john', password='123')
+
+        opts, object_id = self.object._meta, self.object.pk
+
+        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        self.assertEqual(hits['total'], 0)
+
+        self.client.get(reverse('test_detail', args=[object_id]))
+
+        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        self.assertEqual(hits['total'], 0)  # returns cached result
+
+        cache.clear()  # clear cache
+
+        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        self.assertEqual(hits['total'], 1)  # returns fresh results
+
+        # second hit
+        self.client.get(reverse('test_detail', args=[object_id]))
+
+        cache.clear()  # clear cache
+
+        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        self.assertEqual(hits['total'], 1)  # returns fresh results
+
+    def test_context_data(self):
         opts, object_id = self.object._meta, self.object.pk
 
         response = self.client.get(reverse('test_detail', args=[object_id]))
