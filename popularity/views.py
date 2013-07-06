@@ -24,7 +24,7 @@ class PopularityMixin(object):
                 username=u.username if u.is_authenticated() else None,
                 app_label=opts.app_label,
                 model=opts.module_name,
-                object_id=self.object_id,
+                object_id=self.object.id,
                 )
 
         return response
