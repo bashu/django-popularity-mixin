@@ -31,5 +31,7 @@ class PopularityMixin(object):
 
     @classmethod
     def get_hitcount_for(cls, obj):
-        opts, object_id = obj._meta, obj.pk
-        return HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        if getattr(settings, 'USE_HITCOUNT', False):
+            opts, object_id = obj._meta, obj.pk
+            return HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        return None
