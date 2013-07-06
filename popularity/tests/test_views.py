@@ -10,3 +10,4 @@ class PopularityMixinTest(TestCase):
         self.user = User.objects.create_user('john', 'john@foo.com', '123')
 
     def test_default(self):
+        pass
