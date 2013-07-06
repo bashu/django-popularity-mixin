@@ -31,6 +31,8 @@ INSTALLED_APPS = [
     'django_jenkins',
     ] + PROJECT_APPS
 
+ROOT_URLCONF = 'test_urls'
+
 ## Hitcount settings
 
 USE_HITCOUNT = True
@@ -57,6 +59,7 @@ if __name__ == "__main__":
     settings.configure(
         DATABASES = DATABASES,
         INSTALLED_APPS = INSTALLED_APPS,
+        ROOT_URLCONF = ROOT_URLCONF,
         USE_HITCOUNT = USE_HITCOUNT,
         HITCOUNT_KEEP_HIT_ACTIVE = HITCOUNT_KEEP_HIT_ACTIVE,
         HITCOUNT_HITS_PER_IP_LIMIT = HITCOUNT_HITS_PER_IP_LIMIT,
