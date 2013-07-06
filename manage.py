@@ -18,18 +18,28 @@ DATABASES = {
         }
     }
 
+MIDDLEWARE_CLASSES = [
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    ]
+
 PROJECT_APPS = [
     'popularity',
     ]
 
 INSTALLED_APPS = [
-    'django.contrib.contenttypes',
     'django.contrib.auth',
+    'django.contrib.sessions',
+    'django.contrib.contenttypes',
 
     'djcelery',
     'hitcount',
     'django_jenkins',
     ] + PROJECT_APPS
+
+TEMPLATE_DIRS = [
+    os.path.join(PROJECT_ROOT, 'test_templates'),
+    ]
 
 ROOT_URLCONF = 'test_urls'
 
@@ -41,6 +51,7 @@ HITCOUNT_HITS_PER_IP_LIMIT = 0
 
 ## Celery settings
 
+CELERY_ALWAYS_EAGER = True
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
 JENKINS_TASKS = (
@@ -60,9 +71,12 @@ if __name__ == "__main__":
         DATABASES = DATABASES,
         INSTALLED_APPS = INSTALLED_APPS,
         ROOT_URLCONF = ROOT_URLCONF,
+        MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES,
         USE_HITCOUNT = USE_HITCOUNT,
+        TEMPLATE_DIRS = TEMPLATE_DIRS,
         HITCOUNT_KEEP_HIT_ACTIVE = HITCOUNT_KEEP_HIT_ACTIVE,
         HITCOUNT_HITS_PER_IP_LIMIT = HITCOUNT_HITS_PER_IP_LIMIT,
+        CELERY_ALWAYS_EAGER = CELERY_ALWAYS_EAGER,
         CELERYBEAT_SCHEDULER = CELERYBEAT_SCHEDULER,
         PROJECT_APPS = PROJECT_APPS,
         JENKINS_TASKS = JENKINS_TASKS,
