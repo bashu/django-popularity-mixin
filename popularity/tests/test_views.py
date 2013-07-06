@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from django.test import TestCase
 from django.conf import settings
+from django.test import TestCase
 from django.core.cache import cache
 from django.core.urlresolvers import reverse
 from django.contrib.auth.models import User
@@ -16,23 +16,25 @@ class PopularityAnonymousTest(TestCase):
 
         self.object = User.objects.create_user('john', 'john@foo.com', '123')
 
+        self.job = HitCountJob()
+
     def tearDown(self):
         cache.clear()
 
     def test_anonymous(self):
         opts, object_id = self.object._meta, self.object.pk
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)
 
         self.client.get(reverse('test_detail', args=[object_id]))
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)  # returns cached result
 
         cache.clear()  # clear cache
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
         # second hit
@@ -40,7 +42,7 @@ class PopularityAnonymousTest(TestCase):
 
         cache.clear()  # clear cache
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
     def test_context_data(self):
@@ -58,23 +60,25 @@ class PopularityAuthenticatedTest(TestCase):
         self.object = User.objects.create_user('john', 'john@foo.com', '123')
         self.client.login(username='john', password='123')
 
+        self.job = HitCountJob()
+
     def tearDown(self):
         cache.clear()
 
     def test_authenticated(self):
         opts, object_id = self.object._meta, self.object.pk
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)
 
         self.client.get(reverse('test_detail', args=[object_id]))
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)  # returns cached result
 
         cache.clear()  # clear cache
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
         # second hit
@@ -82,7 +86,7 @@ class PopularityAuthenticatedTest(TestCase):
 
         cache.clear()  # clear cache
 
-        hits = HitCountJob().get(opts.app_label, opts.module_name, object_id)
+        hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
     def test_context_data(self):

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
+from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AnonymousUser, User
 from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
@@ -11,6 +12,7 @@ from hitcount.models import Hit, HitCount, BlacklistIP, BlacklistUserAgent
 
 
 @task(ignore_result=True)
+@transaction.commit_on_success
 def update_hitcount(session_key, ip_address, user_agent, username,
                     app_label, model, object_id):
 
@@ -72,8 +74,9 @@ class HitCountJob(Job):
     def fetch(self, app_label, model, object_id):
         ctype = ContentType.objects.get(app_label=app_label, model=model)
         try:
-            obj, created = HitCount.objects.get_or_create(
-                content_type=ctype, object_pk=object_id)
+            obj = HitCount.objects.get(content_type=ctype, object_pk=object_id)
+        except ObjectDoesNotExist:
+            return {'total': 0, 'today': 0}
         except MultipleObjectsReturned:
             items = HitCount.objects.filter(
                 content_type=ctype, object_pk=object_id)
