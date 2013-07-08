@@ -15,14 +15,10 @@ setup(
     description='Put short description here...',
     long_description=README,
     author='Basil Shubin',
-    dependency_links = [
-        'http://github.com/bashu/django-hitcount/tarball/master#egg=django-hitcount-ng',
-    ],
     install_requires=[
         'celery',
         'django-celery',
         'django-cacheback',
-        'django-hitcount-ng',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
