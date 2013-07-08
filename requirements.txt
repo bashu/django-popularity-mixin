@@ -1,7 +1,7 @@
 django==1.4.5
 django-celery
 django-cacheback
--e git+https://github.com/bashu/django-hitcount.git#egg=django-hitcount
+-e git+https://github.com/bashu/django-hitcount-lite.git#egg=django-hitcount-lite
 -e git+https://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
 pep8
 pyflakes

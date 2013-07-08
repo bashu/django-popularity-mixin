@@ -19,6 +19,10 @@ setup(
         'celery',
         'django-celery',
         'django-cacheback',
+        'django-hitcount-lite',
+    ],
+    dependency_links = [
+        'http://github.com/bashu/django-hitcount-lite/tarball/master#egg=django-hitcount-lite',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
