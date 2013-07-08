@@ -2,9 +2,9 @@
 
 from django.conf import settings
 from django.db import transaction
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AnonymousUser, User
-from django.core.exceptions import MultipleObjectsReturned, ObjectDoesNotExist
 
 from celery.task import task
 from cacheback.base import Job
@@ -76,12 +76,6 @@ class HitCountJob(Job):
         try:
             obj = HitCount.objects.get(content_type=ctype, object_pk=object_id)
         except ObjectDoesNotExist:
-            return {'total': 0, 'today': 0}
-        except MultipleObjectsReturned:
-            items = HitCount.objects.filter(
-                content_type=ctype, object_pk=object_id)
-            obj = items[0]
-            for extra_items in items[1:]:
-                extra_items.delete()
+            return {'total': 0, 'today': 0}  # fallback to defaults
 
         return {'total': obj.hits, 'today': obj.hits_in_last(days=1)}
