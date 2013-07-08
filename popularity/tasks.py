@@ -76,6 +76,6 @@ class HitCountJob(Job):
         try:
             obj = HitCount.objects.get(content_type=ctype, object_pk=object_id)
         except ObjectDoesNotExist:
-            return {'total': 1, 'today': 1}  # fallback to defaults
+            return {'total': 0, 'today': 0}  # fallback
 
         return {'total': obj.hits, 'today': obj.hits_in_last(days=1)}
