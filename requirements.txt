@@ -4,3 +4,4 @@ django-cacheback
 git+https://github.com/bashu/django-hitcount-lite.git
 git+https://github.com/kmmbvnr/django-jenkins.git
 pyflakes
+pep8
