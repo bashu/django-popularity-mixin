@@ -29,6 +29,7 @@ PROJECT_APPS = [
 
 INSTALLED_APPS = [
     'django.contrib.auth',
+    'django.contrib.sites',
     'django.contrib.sessions',
     'django.contrib.contenttypes',
 
@@ -42,6 +43,8 @@ TEMPLATE_DIRS = [
     ]
 
 ROOT_URLCONF = 'test_urls'
+
+SITE_ID = 1
 
 ## Hitcount settings
 
@@ -71,6 +74,7 @@ if __name__ == "__main__":
         DATABASES = DATABASES,
         INSTALLED_APPS = INSTALLED_APPS,
         ROOT_URLCONF = ROOT_URLCONF,
+        SITE_ID = SITE_ID,
         MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES,
         USE_HITCOUNT = USE_HITCOUNT,
         TEMPLATE_DIRS = TEMPLATE_DIRS,
