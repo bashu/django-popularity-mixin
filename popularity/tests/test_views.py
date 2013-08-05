@@ -27,7 +27,7 @@ class PopularityAnonymousTest(TestCase):
         hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)
 
-        response = self.client.get(reverse('test_view', args=[object_id]))
+        self.client.get(reverse('test_view', args=[object_id]))
 
         hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)  # returns cached result
@@ -38,7 +38,7 @@ class PopularityAnonymousTest(TestCase):
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
         # second hit
-        response = self.client.get(reverse('test_view', args=[object_id]))
+        self.client.get(reverse('test_view', args=[object_id]))
 
         cache.clear()  # clear cache
 
@@ -72,7 +72,7 @@ class PopularityAuthenticatedTest(TestCase):
         hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)
 
-        response = self.client.get(reverse('test_view', args=[object_id]))
+        self.client.get(reverse('test_view', args=[object_id]))
 
         hits = self.job.get(opts.app_label, opts.module_name, object_id)
         self.assertEqual(hits['total'], 0)  # returns cached result
@@ -83,7 +83,7 @@ class PopularityAuthenticatedTest(TestCase):
         self.assertEqual(hits['total'], 1)  # returns fresh results
 
         # second hit
-        response = self.client.get(reverse('test_view', args=[object_id]))
+        self.client.get(reverse('test_view', args=[object_id]))
 
         cache.clear()  # clear cache
 
