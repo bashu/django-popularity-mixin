@@ -36,6 +36,7 @@ INSTALLED_APPS = [
     'djcelery',
     'hitcount',
     'django_jenkins',
+    'discover_runner',
     ] + PROJECT_APPS
 
 TEMPLATE_DIRS = [
@@ -57,12 +58,15 @@ HITCOUNT_HITS_PER_IP_LIMIT = 0
 CELERY_ALWAYS_EAGER = True
 CELERYBEAT_SCHEDULER = "djcelery.schedulers.DatabaseScheduler"
 
+TEST_RUNNER = 'discover_runner.DiscoverRunner'
+
 JENKINS_TASKS = (
-    'django_jenkins.tasks.run_pylint',
-    'django_jenkins.tasks.run_pep8',
-    'django_jenkins.tasks.run_pyflakes',
     'django_jenkins.tasks.with_coverage',
     'django_jenkins.tasks.django_tests',
+    'django_jenkins.tasks.dir_tests',
+    'django_jenkins.tasks.run_pyflakes',
+    'django_jenkins.tasks.run_pylint',
+    'django_jenkins.tasks.run_pep8',
     )
 
 COVERAGE_EXCLUDES_FOLDERS = ['popularity/tests/*']
@@ -83,6 +87,7 @@ if __name__ == "__main__":
         CELERY_ALWAYS_EAGER = CELERY_ALWAYS_EAGER,
         CELERYBEAT_SCHEDULER = CELERYBEAT_SCHEDULER,
         PROJECT_APPS = PROJECT_APPS,
+        TEST_RUNNER = TEST_RUNNER,
         JENKINS_TASKS = JENKINS_TASKS,
         COVERAGE_EXCLUDES_FOLDERS = COVERAGE_EXCLUDES_FOLDERS,
         PYLINT_RCFILE = PYLINT_RCFILE,
