@@ -9,7 +9,7 @@ class PopularityMixin(object):
 
     def get(self, request, *args, **kwargs):
         response = super(PopularityMixin, self).get(request, *args, **kwargs)
-        if getattr(settings, 'USE_HITCOUNT', False):
+        if getattr(settings, 'USE_HITCOUNT', False) and hasattr(self, 'object'):
             from hitcount.utils import get_ip
 
             opts, u = self.object._meta, request.user
