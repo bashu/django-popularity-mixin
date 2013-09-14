@@ -1,6 +1,7 @@
 django==1.4.5
-django-celery
-django-cacheback
+celery==3.0.23
+django-celery==3.0.23
+django-cacheback==0.5
 django-discover-runner
 git+https://github.com/bashu/django-hitcount-lite.git
 git+https://github.com/kmmbvnr/django-jenkins.git

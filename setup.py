@@ -16,9 +16,9 @@ setup(
     long_description=README,
     author='Basil Shubin',
     install_requires=[
-        'celery',
-        'django-celery',
-        'django-cacheback',
+        'celery==3.0.23',
+        'django-celery==3.0.23',
+        'django-cacheback==0.5',
         'django-hitcount-lite',
     ],
     dependency_links = [
