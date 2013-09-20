@@ -1,9 +1,8 @@
 django==1.4.5
 celery==3.0.23
 django-celery==3.0.23
+django-hitcount==0.2.3a 
 django-cacheback==0.5
 django-discover-runner
-git+https://github.com/bashu/django-hitcount-lite.git
-git+https://github.com/kmmbvnr/django-jenkins.git
-pyflakes
-pep8
+git+https://github.com/kmmbvnr/django-jenkins.git#egg=django-jenkins
+flake8
