@@ -7,8 +7,8 @@ README = open(os.path.join(os.path.dirname(__file__), 'README.rst')).read()
 os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
-    name='django-popularity',
-    version='0.1',
+    name='django-popularity-mixin',
+    version='0.1.1',
     packages=['popularity'],
     include_package_data=True,
     license='GNU Library or LGPL License',
@@ -18,11 +18,8 @@ setup(
     install_requires=[
         'celery==3.0.23',
         'django-celery==3.0.23',
+        'django-hitcount==0.2.3a',
         'django-cacheback==0.5',
-        'django-hitcount-lite',
-    ],
-    dependency_links = [
-        'http://github.com/bashu/django-hitcount-lite/tarball/master#egg=django-hitcount-lite',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
