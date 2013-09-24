@@ -8,7 +8,7 @@ os.chdir(os.path.normpath(os.path.join(os.path.abspath(__file__), os.pardir)))
 
 setup(
     name='django-popularity-mixin',
-    version='0.1.1',
+    version='0.1.2',
     packages=['popularity'],
     include_package_data=True,
     license='GNU Library or LGPL License',
@@ -16,10 +16,9 @@ setup(
     long_description=README,
     author='Basil Shubin',
     install_requires=[
-        'celery==3.0.23',
-        'django-celery==3.0.23',
-        'django-hitcount==0.2.3a',
+        'django-celery>=3.0,<3.1',
         'django-cacheback==0.5',
+        'django-hitcount-lite==0.2.beta',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
