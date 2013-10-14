@@ -31,6 +31,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.sites',
     'django.contrib.sessions',
+    'django.contrib.flatpages',
     'django.contrib.contenttypes',
 
     'djcelery',
@@ -42,8 +43,6 @@ INSTALLED_APPS = [
 TEMPLATE_DIRS = [
     os.path.join(PROJECT_ROOT, 'test_templates'),
     ]
-
-ROOT_URLCONF = 'test_urls'
 
 SITE_ID = 1
 
@@ -74,7 +73,6 @@ if __name__ == "__main__":
     settings.configure(
         DATABASES = DATABASES,
         INSTALLED_APPS = INSTALLED_APPS,
-        ROOT_URLCONF = ROOT_URLCONF,
         SITE_ID = SITE_ID,
         MIDDLEWARE_CLASSES = MIDDLEWARE_CLASSES,
         USE_HITCOUNT = USE_HITCOUNT,

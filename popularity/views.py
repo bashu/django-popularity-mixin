@@ -2,14 +2,13 @@
 
 from django.conf import settings
 
-from .tasks import update_hitcount, HitCountJob
-
 
 class PopularityMixin(object):
 
     def get(self, request, *args, **kwargs):
         response = super(PopularityMixin, self).get(request, *args, **kwargs)
-        if getattr(settings, 'USE_HITCOUNT', False) and hasattr(self, 'object'):
+        if getattr(settings, 'USE_HITCOUNT') and hasattr(self, 'object'):
+            from .tasks import update_hitcount
             from hitcount.utils import get_ip
 
             opts, u = self.object._meta, request.user
@@ -32,6 +31,9 @@ class PopularityMixin(object):
     @classmethod
     def get_hitcount_for(cls, obj):
         if getattr(settings, 'USE_HITCOUNT', False):
+            from .tasks import HitCountJob
+
             opts, pk = obj._meta, obj.pk
             return HitCountJob().get(opts.app_label, opts.module_name, pk)
-        return None
+        else:
+            return None

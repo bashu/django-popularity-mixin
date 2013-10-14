@@ -24,10 +24,13 @@ class PopularityTag(Tag):
         if getattr(settings, 'USE_HITCOUNT', False):
             opts, pk = instance._meta, instance.pk
             hitcount = HitCountJob().get(opts.app_label, opts.module_name, pk)
-            if varname:
-                context[varname] = hitcount
-                return ''
+        else:
+            hitcount = None
+
+        if varname:
+            context[varname] = hitcount
+            return ''
+        else:
             return hitcount
-        return None
 
 register.tag(PopularityTag)
