@@ -41,7 +41,7 @@ class PopularityMixinAnonymousTest(TestCase):
 
     def setUp(self):
         self.old_USE_HITCOUNT = getattr(settings, 'USE_HITCOUNT', True)
-        settings.USE_HITCOUNT = True  # make hit counting is enabled
+        settings.USE_HITCOUNT = True  # enable hit counting
 
         self.object = mommy.make('flatpages.FlatPage')
 
@@ -58,11 +58,10 @@ class PopularityMixinAnonymousTest(TestCase):
         response = self.view(self.request, pk=self.object.pk)
         self.assertEqual(response.context_data['hitcount']['total'], 0)  # returns cached result
 
-        cache.clear()  # clear cache
+        cache.clear()  # explicitly clear cache
 
-        # second hit
+        # second hit, after cache is cleared
         response = self.view(self.request, pk=self.object.pk)
-
         self.assertEqual(response.context_data['hitcount']['total'], 1)  # returns fresh result
 
 
@@ -71,7 +70,7 @@ class PopularityMixinAuthenticatedTest(TestCase):
 
     def setUp(self):
         self.old_USE_HITCOUNT = getattr(settings, 'USE_HITCOUNT', True)
-        settings.USE_HITCOUNT = True  # make hit counting is enabled
+        settings.USE_HITCOUNT = True  # enable hit counting
 
         self.object = mommy.make('flatpages.FlatPage')
 
@@ -88,15 +87,14 @@ class PopularityMixinAuthenticatedTest(TestCase):
         response = self.view(self.request, pk=self.object.pk)
         self.assertEqual(response.context_data['hitcount']['total'], 0)  # returns cached result
 
-        cache.clear()  # clear cache
+        cache.clear()  # explicitly clear cache
 
-        # second hit
+        # second hit, after cache is cleared
         response = self.view(self.request, pk=self.object.pk)
-
         self.assertEqual(response.context_data['hitcount']['total'], 1)  # returns fresh result
 
 
-class PopularityDisabledTest(TestCase):
+class PopularityMixinDisabledTest(TestCase):
 
     def setUp(self):
         self.old_USE_HITCOUNT = settings.USE_HITCOUNT
