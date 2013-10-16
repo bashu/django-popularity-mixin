@@ -32,7 +32,7 @@ class HitCountJobTest(TestCase):
 
         self.assertEqual(hits['total'], 0)  # returns cached result
 
-    def test_refresh_timeout(self):
+    def test_refresh_interval(self):
         # overriding default settings...
         with self.settings(HITCOUNT_REFRESH_INTERVAL=0):
             opts, object_id = self.object._meta, self.object.pk
