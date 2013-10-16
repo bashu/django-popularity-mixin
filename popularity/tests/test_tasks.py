@@ -44,7 +44,7 @@ class HitCountJobTest(TestCase):
 
             self.assertEqual(hits['total'], 0)  # first run, nothing yet
 
-            # second hit, will return stale result, but call async
+            # second hit, will return stale result, but starts async
             # refreshing...
             with self.assertNumQueries(2):  # aha, we do make queries
                 hits = job.get(opts.app_label, opts.module_name, object_id)
