@@ -20,6 +20,7 @@ setup(
         'django-cacheback>=0.7',
         'django-classy-tags>=0.5',
         'django-hitcount-headless>=0.2.beta',
+        'django-celery-transactions>=0.1.3',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
