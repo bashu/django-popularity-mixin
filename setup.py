@@ -17,9 +17,9 @@ setup(
     author='Basil Shubin',
     install_requires=[
         'django-celery>=3.0,<3.1',
-        'django-cacheback==0.5',
-        'django-classy-tags==0.4',
-        'django-hitcount-headless==0.2.beta',
+        'django-cacheback>=0.7',
+        'django-classy-tags>=0.5',
+        'django-hitcount-headless>=0.2.beta',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
