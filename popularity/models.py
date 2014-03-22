@@ -12,4 +12,6 @@ from .tasks import HitCountJob
 def invalidate(sender, instance, **kwargs):
     if 'created' in kwargs and kwargs['created'] is True:
         opts, object_id = instance._meta, instance.pk,
-        HitCountJob().invalidate(opts.app_label, opts.module_name, object_id)
+        # invalidate cache...
+        HitCountJob().invalidate(
+            opts.app_label, opts.module_name, object_id)
