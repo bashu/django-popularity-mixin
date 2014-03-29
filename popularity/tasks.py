@@ -8,6 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 from cacheback.base import Job
 from djcelery_transactions import task
 
+from hitcount.models import HitCount
 from popularity.utils import update_hitcount
 
 
