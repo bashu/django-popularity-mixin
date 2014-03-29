@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from django.conf import settings
+from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AnonymousUser, User
 
