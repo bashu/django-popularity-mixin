@@ -22,7 +22,7 @@ class PopularityMixin(object):
                 user_agent=request.META.get('HTTP_USER_AGENT', '')[:255],
                 username=u.username if u.is_authenticated() else None,
                 app_label=opts.app_label,
-                model=opts.module_name,
+                model=opts.model_name,
                 object_id=self.object.id,
                 )
 
@@ -34,6 +34,6 @@ class PopularityMixin(object):
             from popularity.tasks import HitCountJob
 
             opts, pk = obj._meta, obj.pk
-            return HitCountJob().get(opts.app_label, opts.module_name, pk)
+            return HitCountJob().get(opts.app_label, opts.model_name, pk)
         else:
             return None

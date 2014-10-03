@@ -23,7 +23,7 @@ class PopularityTag(Tag):
     def render_tag(self, context, instance, varname):
         if getattr(settings, 'USE_HITCOUNT', False):
             opts, pk = instance._meta, instance.pk
-            hitcount = HitCountJob().get(opts.app_label, opts.module_name, pk)
+            hitcount = HitCountJob().get(opts.app_label, opts.model_name, pk)
         else:
             hitcount = None
 

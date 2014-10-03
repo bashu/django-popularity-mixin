@@ -9,9 +9,7 @@ from .tasks import HitCountJob
 
 
 @receiver(post_save, sender=Hit)
-def invalidate(sender, instance, **kwargs):
+def invalidate_cache(sender, instance, **kwargs):
     if 'created' in kwargs and kwargs['created'] is True:
         opts, object_id = instance._meta, instance.pk,
-        # invalidate cache...
-        HitCountJob().invalidate(
-            opts.app_label, opts.module_name, object_id)
+        HitCountJob().invalidate(opts.app_label, opts.model_name, object_id)

@@ -66,7 +66,6 @@ class PopularityMixinAnonymousTest(TestCase):
 
 
 class PopularityMixinAuthenticatedTest(TestCase):
-    fixtures = ['users']
 
     def setUp(self):
         self.old_USE_HITCOUNT = getattr(settings, 'USE_HITCOUNT', True)

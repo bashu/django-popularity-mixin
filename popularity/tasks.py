@@ -5,18 +5,20 @@ from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 
+from celery.task import task
 from cacheback.base import Job
-from djcelery_transactions import task
 
 from hitcount.models import HitCount
 from popularity.utils import update_hitcount
 
 
 @task(ignore_result=True)
-def celery_update_hitcount(session_key, ip_address, user_agent, username, app_label, model, object_id):
+def celery_update_hitcount(
+        session_key, ip_address, user_agent, username, app_label, model, object_id):
 
-    with transaction.commit_on_success():
-        return update_hitcount(session_key, ip_address, user_agent, username, app_label, model, object_id)
+    with transaction.atomic():
+        return update_hitcount(
+            session_key, ip_address, user_agent, username, app_label, model, object_id)
 
 
 class HitCountJob(Job):
