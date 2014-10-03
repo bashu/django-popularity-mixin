@@ -16,11 +16,10 @@ setup(
     long_description=README,
     author='Basil Shubin',
     install_requires=[
-        'django-celery>=3.0,<3.1',
+        'django-celery>=3.0,<3.2',
         'django-cacheback>=0.7',
         'django-classy-tags>=0.5',
-        'django-hitcount-headless>=0.2.beta',
-        'django-celery-transactions>=0.1.3',
+        'django-hitcount-headless>=0.2',
     ],
     author_email='basil.shubin@gmail.com',
     classifiers=[
