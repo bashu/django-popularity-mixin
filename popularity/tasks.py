@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-from django.db import transaction
 from django.contrib.contenttypes.models import ContentType
 from django.core.exceptions import ObjectDoesNotExist
 
@@ -16,9 +15,8 @@ from popularity.utils import update_hitcount
 def celery_update_hitcount(
         session_key, ip_address, user_agent, username, app_label, model, object_id):
 
-    with transaction.atomic():
-        return update_hitcount(
-            session_key, ip_address, user_agent, username, app_label, model, object_id)
+    return update_hitcount(
+        session_key, ip_address, user_agent, username, app_label, model, object_id)
 
 
 class HitCountJob(Job):

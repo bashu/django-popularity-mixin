@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
+from django.db import transaction
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.contenttypes.models import ContentType
 from django.contrib.auth.models import AnonymousUser, User
@@ -8,6 +9,7 @@ from django.contrib.auth.models import AnonymousUser, User
 from hitcount.models import Hit, HitCount, BlacklistIP, BlacklistUserAgent
 
 
+@transaction.atomic
 def update_hitcount(session_key, ip_address, user_agent, username, app_label, model, object_id):
 
     try:
