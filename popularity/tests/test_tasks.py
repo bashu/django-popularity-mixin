@@ -22,13 +22,13 @@ class HitCountJobTest(TestCase):
 
         # first hit...
         with self.assertNumQueries(2):
-            hits = job.get(opts.app_label, opts.module_name, object_id)
+            hits = job.get(opts.app_label, opts.model_name, object_id)
 
         self.assertEqual(hits['total'], 0)  # first run, nothing yet
 
         # second hit, will return cached result...
         with self.assertNumQueries(0):  # nothing in background
-            hits = job.get(opts.app_label, opts.module_name, object_id)
+            hits = job.get(opts.app_label, opts.model_name, object_id)
 
         self.assertEqual(hits['total'], 0)  # returns cached result
 
@@ -40,13 +40,13 @@ class HitCountJobTest(TestCase):
 
             # first hit...
             with self.assertNumQueries(2):
-                hits = job.get(opts.app_label, opts.module_name, object_id)
+                hits = job.get(opts.app_label, opts.model_name, object_id)
 
             self.assertEqual(hits['total'], 0)  # first run, nothing yet
 
             # second hit, will return stale result, but starts async
             # refreshing...
             with self.assertNumQueries(2):  # aha, we do make queries
-                hits = job.get(opts.app_label, opts.module_name, object_id)
+                hits = job.get(opts.app_label, opts.model_name, object_id)
 
             self.assertEqual(hits['total'], 0)  # returns stale result
