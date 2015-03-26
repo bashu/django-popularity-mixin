@@ -8,8 +8,8 @@ Put short description here...
    :target: https://travis-ci.org/bashu/django-popularity-mixin
    :alt: Build Status
 
-.. image:: https://badge.fury.io/py/django-popularity-mixin.png
-   :target: http://badge.fury.io/py/django-popularity-mixin
+.. image:: https://pypip.in/v/django-popularity-mixin/badge.png
+   :target: https://pypi.python.org/pypi/django-popularity-mixin
    :alt: Latest Release
 
 .. image:: https://pypip.in/d/django-popularity-mixin/badge.png
