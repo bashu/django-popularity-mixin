@@ -11,4 +11,4 @@ Authored by [Basil Shubin](https://github.com/bashu)
 
 ## License
 
-`django-popularity-mixin` is released under the LGPL v2 or later license.
+`django-popularity-mixin` is released under the MIT license.
