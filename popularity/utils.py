@@ -25,22 +25,28 @@ def update_hitcount(session_key, ip_address, user_agent, username, app_label, mo
     hits_per_ip_limit = getattr(settings, 'HITCOUNT_HITS_PER_IP_LIMIT', 0)
     exclude_user_group = getattr(settings, 'HITCOUNT_EXCLUDE_USER_GROUP', None)
 
-    # first, check our request against the blacklists before continuing
-    if BlacklistIP.objects.filter(ip__exact=ip_address) or \
-            BlacklistUserAgent.objects.filter(user_agent__exact=user_agent):
+    # first, check our request against the IP blacklist
+    if BlacklistIP.objects.filter(ip__exact=ip_address):
         return False
 
-    # second, see if we are excluding a specific user group or not
-    if exclude_user_group and user.is_authenticated():
+    # second, check our request against the user agent blacklist
+    if BlacklistUserAgent.objects.filter(user_agent__exact=user_agent):
+        return False
+
+    # third, see if we are excluding a specific user group or not
+    if exclude_user_group and not isinstance(user, AnonymousUser):
         if user.groups.filter(name__in=exclude_user_group):
             return False
 
-    # start with a fresh active query set (HITCOUNT_KEEP_HIT_ACTIVE )
+    # eliminated first three possible exclusions, now on to checking our database of
+    # active hits to see if we should count another one
+    
+    # start with a fresh active query set (HITCOUNT_KEEP_HIT_ACTIVE)
     qs = Hit.objects.filter_active()
 
     # check limit on hits from a unique ip address (HITCOUNT_HITS_PER_IP_LIMIT)
     if hits_per_ip_limit:
-        if qs.filter(ip__exact=ip_address).count() > hits_per_ip_limit:
+        if qs.filter(ip__exact=ip_address).count() >= hits_per_ip_limit:
             return False
 
     # create a generic Hit object with request data
@@ -48,7 +54,7 @@ def update_hitcount(session_key, ip_address, user_agent, username, app_label, mo
               user_agent=user_agent)
 
     # first, use a user's authentication to see if they made an earlier hit
-    if user.is_authenticated():
+    if not isinstance(user, AnonymousUser):
         if not qs.filter(user=user, hitcount=hitcount):
             hit.user = user  # associate this hit with a user
             hit.save()
