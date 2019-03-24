@@ -18,17 +18,17 @@ INSTALLED_APPS = [
     'django.contrib.sites',
     'django.contrib.flatpages',
 
+    'djcelery',
+    
     'hitcount',
     'cacheback',
 ] + PROJECT_APPS
 
-MIDDLEWARE = [
+MIDDLEWARE_CLASSES = [
     'django.middleware.common.CommonMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
 ]
-
-MIDDLEWARE_CLASSES = MIDDLEWARE
 
 TEMPLATES = [
     {
