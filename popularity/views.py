@@ -16,15 +16,20 @@ class PopularityMixin(object):
             if not request.session.session_key:
                 request.session.save()
 
+            try:
+                is_authenticated = u.is_authenticated()
+            except:
+                is_authenticated = u.is_authenticated
+
             celery_update_hitcount.delay(
                 session_key=request.session.session_key,
                 ip_address=get_ip(request),
                 user_agent=request.META.get('HTTP_USER_AGENT', '')[:255],
-                username=u.username if u.is_authenticated() else None,
+                username=u.username if is_authenticated else None,
                 app_label=opts.app_label,
                 model=opts.model_name,
                 object_id=self.object.id,
-                )
+            )
 
         return response
 

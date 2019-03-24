@@ -6,6 +6,7 @@ from django.core.cache import cache
 from django.views.generic import DetailView
 from django.test.client import RequestFactory
 from django.core.handlers.base import BaseHandler
+from django.utils.module_loading import import_string
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.flatpages.models import FlatPage
 
@@ -20,10 +21,12 @@ class RequestMock(RequestFactory):
         request = RequestFactory.request(self, **request)
         handler = BaseHandler()
         handler.load_middleware()
-        for middleware_method in handler._request_middleware:
-            if middleware_method(request):
-                raise Exception("Couldn't create request mock object - "
-                                "request middleware returned a response")
+        # call each middleware in turn and throw away any responses that they might return
+        for middleware_path in settings.MIDDLEWARE:
+            middleware = import_string(middleware_path)(handler)
+            if hasattr(middleware, 'process_request'):
+                middleware.process_request(request)
+
         return request
 
 

@@ -1,0 +1,6 @@
+django
+django-celery
+django-cacheback
+django-classy-tags>0.5
+django-hitcount>0.2
+whitenoise

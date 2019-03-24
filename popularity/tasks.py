@@ -8,7 +8,8 @@ from celery.task import task
 from cacheback.base import Job
 
 from hitcount.models import HitCount
-from popularity.utils import update_hitcount
+
+from .utils import update_hitcount
 
 
 @task(ignore_result=True)

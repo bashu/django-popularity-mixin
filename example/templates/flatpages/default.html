@@ -1,0 +1,11 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>{{ flatpage.title }}</title>
+  </head>
+  <body>
+    {{ flatpage.content }}
+    <hr />
+    {% load popularity_tags %}{% get_hitcount for flatpage as hitcount %}Total: {{ hitcount.total }}, today: {{ hitcount.today }}
+  </body>
+</html>

@@ -1,8 +1,0 @@
-django
-django-celery>=3.0,<3.1
-django-cacheback
-django-classy-tags
-django-hitcount-headless>=0.2
-django-jenkins
-model-mommy
-flake8
