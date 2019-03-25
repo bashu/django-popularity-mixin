@@ -1,16 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from django.conf import settings
+from django.db.models.base import Model
+
+from hitcount.utils import get_ip
+
+from popularity.tasks import celery_update_hitcount
 
 
 class PopularityMixin(object):
 
     def get(self, request, *args, **kwargs):
         response = super(PopularityMixin, self).get(request, *args, **kwargs)
-        if getattr(settings, 'USE_HITCOUNT') and hasattr(self, 'object'):
-            from hitcount.utils import get_ip
-            from popularity.tasks import celery_update_hitcount
-
+        if hasattr(self, 'object') and isinstance(self.object, Model): # hey we got a model instance
             opts, u = self.object._meta, request.user
 
             if not request.session.session_key:
@@ -34,11 +35,11 @@ class PopularityMixin(object):
         return response
 
     @classmethod
-    def get_hitcount_for(cls, obj):
-        if getattr(settings, 'USE_HITCOUNT', False):
+    def get_hitcount_for(cls, instance):
+        if isinstance(instance, Model): # hey we got a model instance
             from popularity.tasks import HitCountJob
 
-            opts, pk = obj._meta, obj.pk
+            opts, pk = instance._meta, instance.pk
             return HitCountJob().get(opts.app_label, opts.model_name, pk)
         else:
             return None

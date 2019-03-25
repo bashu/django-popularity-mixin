@@ -43,9 +43,6 @@ class ViewMock(PopularityMixin, DetailView):
 class PopularityMixinAnonymousTest(TestCase):
 
     def setUp(self):
-        self.old_USE_HITCOUNT = getattr(settings, 'USE_HITCOUNT', True)
-        settings.USE_HITCOUNT = True  # enable hit counting
-
         self.object = mommy.make('flatpages.FlatPage')
 
         self.view = ViewMock.as_view()
@@ -54,7 +51,6 @@ class PopularityMixinAnonymousTest(TestCase):
         self.request.user = AnonymousUser()
 
     def tearDown(self):
-        settings.USE_HITCOUNT = self.old_USE_HITCOUNT
         cache.clear()
 
     def test_hits(self):
@@ -71,9 +67,6 @@ class PopularityMixinAnonymousTest(TestCase):
 class PopularityMixinAuthenticatedTest(TestCase):
 
     def setUp(self):
-        self.old_USE_HITCOUNT = getattr(settings, 'USE_HITCOUNT', True)
-        settings.USE_HITCOUNT = True  # enable hit counting
-
         self.object = mommy.make('flatpages.FlatPage')
 
         self.view = ViewMock.as_view()
@@ -82,7 +75,6 @@ class PopularityMixinAuthenticatedTest(TestCase):
         self.request.user = User.objects.create_user('john', password='123')
 
     def tearDown(self):
-        settings.USE_HITCOUNT = self.old_USE_HITCOUNT
         cache.clear()
 
     def test_hits(self):
@@ -94,25 +86,3 @@ class PopularityMixinAuthenticatedTest(TestCase):
         # second hit, after cache is cleared
         response = self.view(self.request, pk=self.object.pk)
         self.assertEqual(response.context_data['hitcount']['total'], 1)  # returns fresh result
-
-
-class PopularityMixinDisabledTest(TestCase):
-
-    def setUp(self):
-        self.old_USE_HITCOUNT = settings.USE_HITCOUNT
-        settings.USE_HITCOUNT = False
-
-        self.object = mommy.make('flatpages.FlatPage')
-
-        self.view = ViewMock.as_view()
-
-        self.request = RequestMock().get('/fake.html')
-        self.request.user = AnonymousUser()
-
-    def tearDown(self):
-        settings.USE_HITCOUNT = self.old_USE_HITCOUNT
-        cache.clear()
-
-    def test_hits(self):
-        response = self.view(self.request, pk=self.object.pk)
-        self.assertEqual(response.context_data['hitcount'], None)
