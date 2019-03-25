@@ -34,10 +34,7 @@ class ViewMock(PopularityMixin, DetailView):
     template_name = 'test.html'
     model = FlatPage
 
-    def get_context_data(self, **kwargs):
-        context = super(ViewMock, self).get_context_data(**kwargs)
-        context.update({'hitcount': self.get_hitcount_for(self.object)})
-        return context
+    count_hit = True  # will trigger async hit counting
 
 
 class PopularityMixinAnonymousTest(TestCase):
@@ -55,13 +52,13 @@ class PopularityMixinAnonymousTest(TestCase):
 
     def test_hits(self):
         response = self.view(self.request, pk=self.object.pk)
-        self.assertEqual(response.context_data['hitcount']['total'], 0)  # returns cached result
+        self.assertEqual(response.context_data['hitcount']['total_hits'], 0)  # returns cached result
 
         cache.clear()  # explicitly clear cache
 
         # second hit, after cache is cleared
         response = self.view(self.request, pk=self.object.pk)
-        self.assertEqual(response.context_data['hitcount']['total'], 1)  # returns fresh result
+        self.assertEqual(response.context_data['hitcount']['total_hits'], 1)  # returns fresh result
 
 
 class PopularityMixinAuthenticatedTest(TestCase):
@@ -79,10 +76,34 @@ class PopularityMixinAuthenticatedTest(TestCase):
 
     def test_hits(self):
         response = self.view(self.request, pk=self.object.pk)
-        self.assertEqual(response.context_data['hitcount']['total'], 0)  # returns cached result
+        self.assertEqual(response.context_data['hitcount']['total_hits'], 0)  # returns cached result
 
         cache.clear()  # explicitly clear cache
 
         # second hit, after cache is cleared
         response = self.view(self.request, pk=self.object.pk)
-        self.assertEqual(response.context_data['hitcount']['total'], 1)  # returns fresh result
+        self.assertEqual(response.context_data['hitcount']['total_hits'], 1)  # returns fresh result
+
+
+class PopularityMixinDisabledTest(TestCase):
+
+    def setUp(self):
+        self.object = mommy.make('flatpages.FlatPage')
+
+        self.view = ViewMock.as_view(count_hit=False)
+
+        self.request = RequestMock().get('/fake.html')
+        self.request.user = AnonymousUser()
+
+    def tearDown(self):
+        cache.clear()
+
+    def test_hits(self):
+        response = self.view(self.request, pk=self.object.pk)
+        self.assertEqual(response.context_data['hitcount']['total_hits'], 0)  # returns cached result
+
+        cache.clear()  # explicitly clear cache
+
+        # second hit, after cache is cleared
+        response = self.view(self.request, pk=self.object.pk)
+        self.assertEqual(response.context_data['hitcount']['total_hits'], 0)  # returns fresh result

@@ -9,11 +9,17 @@ from popularity.tasks import celery_update_hitcount
 
 class PopularityMixin(object):
 
+    count_hit = False
+
     def get(self, request, *args, **kwargs):
         response = super(PopularityMixin, self).get(request, *args, **kwargs)
+
+        if self.count_hit is False:
+            return response
+
         if hasattr(self, 'object') and isinstance(self.object, Model): # hey we got a model instance
             opts, u = self.object._meta, request.user
-
+            
             if not request.session.session_key:
                 request.session.save()
 
@@ -34,12 +40,15 @@ class PopularityMixin(object):
 
         return response
 
-    @classmethod
-    def get_hitcount_for(cls, instance):
-        if isinstance(instance, Model): # hey we got a model instance
+    def get_context_data(self, **kwargs):
+        context = super(PopularityMixin, self).get_context_data(**kwargs)
+
+        if hasattr(self, 'object') and isinstance(self.object, Model): # hey we got a model instance
             from popularity.tasks import HitCountJob
 
-            opts, pk = instance._meta, instance.pk
-            return HitCountJob().get(opts.app_label, opts.model_name, pk)
-        else:
-            return None
+            opts, pk = self.object._meta, self.object.pk
+            hit_count = HitCountJob().get(opts.app_label, opts.model_name, pk)
+
+            context['hitcount'] = {'pk': hit_count.pk, 'total_hits': hit_count.hits}
+
+        return context

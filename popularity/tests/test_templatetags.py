@@ -8,7 +8,7 @@ from model_mommy import mommy
 
 class PopularityTagTest(TestCase):
 
-    html = """{% load popularity_tags %}{% get_hitcount for object as hitcount %}Total: {{ hitcount.total }}, today: {{ hitcount.today }}"""
+    html = """{% load popularity_tags %}{% get_hit_count for object as hits %}Total: {{ hits }} hits"""
 
     @property
     def template(self):
@@ -23,4 +23,4 @@ class PopularityTagTest(TestCase):
         cache.clear()
 
     def test_default(self):
-        self.assertTrue("Total: 0, today: 0" in self.template.render({'object': self.object}))
+        self.assertTrue("Total: 0 hits" in self.template.render({'object': self.object}))

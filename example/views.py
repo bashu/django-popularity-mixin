@@ -12,6 +12,8 @@ from popularity.views import PopularityMixin
 class FlatpageView(PopularityMixin, DetailView):
     context_object_name = 'flatpage'
 
+    count_hit = True
+    
     def get_flatpage(self, request, url):
         if not hasattr(self, '_flatpage'):
             if not url.endswith('/') and settings.APPEND_SLASH:

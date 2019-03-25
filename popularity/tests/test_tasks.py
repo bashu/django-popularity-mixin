@@ -21,16 +21,16 @@ class HitCountJobTest(TestCase):
         job = HitCountJob()
 
         # first hit...
-        with self.assertNumQueries(2):
-            hits = job.get(opts.app_label, opts.model_name, object_id)
+        with self.assertNumQueries(5):
+            hit_count = job.get(opts.app_label, opts.model_name, object_id)
 
-        self.assertEqual(hits['total'], 0)  # first run, nothing yet
+        self.assertEqual(hit_count.hits, 0)  # first run, nothing yet
 
         # second hit, will return cached result...
         with self.assertNumQueries(0):  # nothing in background
-            hits = job.get(opts.app_label, opts.model_name, object_id)
+            hit_count = job.get(opts.app_label, opts.model_name, object_id)
 
-        self.assertEqual(hits['total'], 0)  # returns cached result
+        self.assertEqual(hit_count.hits, 0)  # returns cached result
 
     def test_refresh_interval(self):
         # overriding default settings...
@@ -39,14 +39,14 @@ class HitCountJobTest(TestCase):
             job = HitCountJob()
 
             # first hit...
-            with self.assertNumQueries(2):
-                hits = job.get(opts.app_label, opts.model_name, object_id)
+            with self.assertNumQueries(5):
+                hit_count = job.get(opts.app_label, opts.model_name, object_id)
 
-            self.assertEqual(hits['total'], 0)  # first run, nothing yet
+            self.assertEqual(hit_count.hits, 0)  # first run, nothing yet
 
             # second hit, will return stale result, but starts async
             # refreshing...
             with self.assertNumQueries(2):  # aha, we do make queries
-                hits = job.get(opts.app_label, opts.model_name, object_id)
+                hit_count = job.get(opts.app_label, opts.model_name, object_id)
 
-            self.assertEqual(hits['total'], 0)  # returns stale result
+            self.assertEqual(hit_count.hits, 0)  # returns cached result
