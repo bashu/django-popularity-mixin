@@ -33,7 +33,7 @@ setup(
         'Django (>=1.4.2)',
     ],
 
-    description='Put short description here...',
+    description='Simple integration between django-cacheback and django-hitcount',
     long_description=read('README.rst'),
 
     author='Basil Shubin',
