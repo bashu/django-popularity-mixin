@@ -14,10 +14,10 @@ from .utils import update_hitcount
 
 @task(ignore_result=True)
 def celery_update_hitcount(
-        session_key, ip_address, user_agent, username, app_label, model, object_id):
+        session_key, ip_address, user_agent, user_id, app_label, model, object_id):
 
     return update_hitcount(
-        session_key, ip_address, user_agent, username, app_label, model, object_id)
+        session_key, ip_address, user_agent, user_id, app_label, model, object_id)
 
 
 class HitCountJob(Job):
@@ -28,9 +28,8 @@ class HitCountJob(Job):
 
     def fetch(self, app_label, model, object_id):
         ctype = ContentType.objects.get(app_label=app_label, model=model)
-        try:
-            obj = HitCount.objects.get(content_type=ctype, object_pk=object_id)
-        except ObjectDoesNotExist:
-            return {'total': 0, 'today': 0}  # fallback
 
-        return {'total': obj.hits, 'today': obj.hits_in_last(days=1)}
+        hit_count, created = HitCount.objects.get_or_create(
+            content_type=ctype, object_pk=object_id)
+
+        return hit_count

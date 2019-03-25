@@ -126,7 +126,6 @@ STATIC_URL = '/static/'
 
 ## Hitcount settings
 
-USE_HITCOUNT = True
 HITCOUNT_KEEP_HIT_ACTIVE = { 'hours': 24 }
 HITCOUNT_HITS_PER_IP_LIMIT = 0
 

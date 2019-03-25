@@ -6,6 +6,6 @@
   <body>
     {{ flatpage.content }}
     <hr />
-    {% load popularity_tags %}{% get_hitcount for flatpage as hitcount %}Total: {{ hitcount.total }}, today: {{ hitcount.today }}
+    {% load popularity_tags %}{% get_hit_count for flatpage as hits %}Total: {{ hits }} hits
   </body>
 </html>

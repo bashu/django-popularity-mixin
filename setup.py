@@ -27,8 +27,7 @@ setup(
 
     install_requires=[
         'django-cacheback',
-        'django-classy-tags>0.5',
-        'django-hitcount>0.2',
+        'django-hitcount>1.2',
     ],
     requires=[
         'Django (>=1.4.2)',
