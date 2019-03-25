@@ -14,10 +14,10 @@ from .utils import update_hitcount
 
 @task(ignore_result=True)
 def celery_update_hitcount(
-        session_key, ip_address, user_agent, username, app_label, model, object_id):
+        session_key, ip_address, user_agent, user_id, app_label, model, object_id):
 
     return update_hitcount(
-        session_key, ip_address, user_agent, username, app_label, model, object_id)
+        session_key, ip_address, user_agent, user_id, app_label, model, object_id)
 
 
 class HitCountJob(Job):
