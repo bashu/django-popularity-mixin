@@ -68,7 +68,7 @@ business-logic of counting the hits asynchronously by setting
         template_name = "template.html"
         ...
 
-The ``popularity.viwes.PopularityMixin`` extends Django’s generic
+The ``popularity.views.PopularityMixin`` extends Django’s generic
 ``django.views.generic.detail.DetailView`` and injects an additional
 context variable ``hitcount``.
 
