@@ -5,6 +5,8 @@ import os, sys
 import djcelery
 djcelery.setup_loader()
 
+SECRET_KEY = 'DUMMY_SECRET_KEY'
+
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 PROJECT_APPS = [
