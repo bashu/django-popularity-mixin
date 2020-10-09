@@ -10,15 +10,15 @@ from popularity.views import PopularityMixin
 
 
 class FlatpageView(PopularityMixin, DetailView):
-    context_object_name = 'flatpage'
+    context_object_name = "flatpage"
 
     count_hit = True
-    
+
     def get_flatpage(self, request, url):
-        if not hasattr(self, '_flatpage'):
-            if not url.endswith('/') and settings.APPEND_SLASH:
+        if not hasattr(self, "_flatpage"):
+            if not url.endswith("/") and settings.APPEND_SLASH:
                 return HttpResponseRedirect("%s/" % request.path)
-            if not url.startswith('/'):
+            if not url.startswith("/"):
                 url = "/" + url
             self._flatpage = get_object_or_404(FlatPage, url__exact=url, sites__id__exact=settings.SITE_ID)
             # To avoid having to always use the "|safe" filter in flatpage templates,
@@ -31,9 +31,10 @@ class FlatpageView(PopularityMixin, DetailView):
     def dispatch(self, request, *args, **kwargs):
         # If registration is required for accessing this page, and the user isn't
         # logged in, redirect to the login page.
-        self.flatpage = self.get_flatpage(request, kwargs['url'])
+        self.flatpage = self.get_flatpage(request, kwargs["url"])
         if self.flatpage.registration_required and not request.user.is_authenticated:
             from django.contrib.auth.views import redirect_to_login
+
             return redirect_to_login(request.path)
         return super(FlatpageView, self).dispatch(request, *args, **kwargs)
 

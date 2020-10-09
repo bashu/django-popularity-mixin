@@ -1,17 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from django.test import TestCase
 from django.core.cache import cache
-
+from django.test import TestCase
 from model_mommy import mommy
 
 from popularity.tasks import HitCountJob
 
 
 class HitCountJobTest(TestCase):
-
     def setUp(self):
-        self.object = mommy.make('flatpages.FlatPage')
+        self.object = mommy.make("flatpages.FlatPage")
 
     def tearDown(self):
         cache.clear()

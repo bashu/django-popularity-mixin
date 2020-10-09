@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
 from django.conf import settings
-from django.db import transaction
-from django.core.exceptions import ObjectDoesNotExist
-from django.contrib.contenttypes.models import ContentType
-from django.contrib.auth.models import AnonymousUser
 from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AnonymousUser
+from django.contrib.contenttypes.models import ContentType
+from django.core.exceptions import ObjectDoesNotExist
+from django.db import transaction
 
-from hitcount.models import Hit, HitCount, BlacklistIP, BlacklistUserAgent
+from hitcount.models import BlacklistIP, BlacklistUserAgent, Hit, HitCount
 
 
 @transaction.atomic
@@ -20,11 +20,10 @@ def update_hitcount(session_key, ip_address, user_agent, user_id, app_label, mod
 
     ctype = ContentType.objects.get(app_label=app_label, model=model)
 
-    hitcount, created = HitCount.objects.get_or_create(
-        content_type=ctype, object_pk=object_id)
+    hitcount, created = HitCount.objects.get_or_create(content_type=ctype, object_pk=object_id)
 
-    hits_per_ip_limit = getattr(settings, 'HITCOUNT_HITS_PER_IP_LIMIT', 0)
-    exclude_user_group = getattr(settings, 'HITCOUNT_EXCLUDE_USER_GROUP', None)
+    hits_per_ip_limit = getattr(settings, "HITCOUNT_HITS_PER_IP_LIMIT", 0)
+    exclude_user_group = getattr(settings, "HITCOUNT_EXCLUDE_USER_GROUP", None)
 
     # first, check our request against the IP blacklist
     if BlacklistIP.objects.filter(ip__exact=ip_address):
@@ -41,7 +40,7 @@ def update_hitcount(session_key, ip_address, user_agent, user_id, app_label, mod
 
     # eliminated first three possible exclusions, now on to checking our database of
     # active hits to see if we should count another one
-    
+
     # start with a fresh active query set (HITCOUNT_KEEP_HIT_ACTIVE)
     qs = Hit.objects.filter_active()
 
@@ -51,8 +50,7 @@ def update_hitcount(session_key, ip_address, user_agent, user_id, app_label, mod
             return False
 
     # create a generic Hit object with request data
-    hit = Hit(session=session_key, hitcount=hitcount, ip=ip_address,
-              user_agent=user_agent)
+    hit = Hit(session=session_key, hitcount=hitcount, ip=ip_address, user_agent=user_agent)
 
     # first, use a user's authentication to see if they made an earlier hit
     if not isinstance(user, AnonymousUser):

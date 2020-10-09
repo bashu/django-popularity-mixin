@@ -17,14 +17,14 @@ def get_hit_count_from_obj_variable(context, obj_variable, tag_name):
     error_to_raise = template.TemplateSyntaxError(
         "'%(a)s' requires a valid individual model variable "
         "in the form of '%(a)s for [model_obj]'.\n"
-        "Got: %(b)s" % {'a': tag_name, 'b': obj_variable}
+        "Got: %(b)s" % {"a": tag_name, "b": obj_variable}
     )
 
     try:
         obj = obj_variable.resolve(context)
     except template.VariableDoesNotExist:
         raise error_to_raise
-    
+
     opts, pk = obj._meta, obj.pk
 
     hit_count = HitCountJob().get(opts.app_label, opts.model_name, pk)
@@ -33,9 +33,8 @@ def get_hit_count_from_obj_variable(context, obj_variable, tag_name):
 
 
 class GetHitCount(hitcount_tags.GetHitCount):
-
     def render(self, context):
-        hit_count = get_hit_count_from_obj_variable(context, self.obj_variable, 'get_hit_count')
+        hit_count = get_hit_count_from_obj_variable(context, self.obj_variable, "get_hit_count")
 
         if self.period:  # if user sets a time period, use it
             try:
@@ -52,7 +51,7 @@ class GetHitCount(hitcount_tags.GetHitCount):
 
         if self.as_varname:  # if user gives us a variable to return
             context[self.as_varname] = str(hits)
-            return ''
+            return ""
         else:
             return str(hits)
 
@@ -60,4 +59,5 @@ class GetHitCount(hitcount_tags.GetHitCount):
 def get_hit_count(parser, token):
     return GetHitCount.handle_token(parser, token)
 
-register.tag('get_hit_count', get_hit_count)
+
+register.tag("get_hit_count", get_hit_count)

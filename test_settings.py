@@ -1,62 +1,56 @@
 # -*- coding: utf-8 -*-
 
-import os, sys
+import os
 
 import djcelery
+
 djcelery.setup_loader()
 
-SECRET_KEY = 'DUMMY_SECRET_KEY'
+SECRET_KEY = "DUMMY_SECRET_KEY"
 
 PROJECT_ROOT = os.path.abspath(os.path.dirname(__file__))
 
 PROJECT_APPS = [
-    'popularity',
+    "popularity",
 ]
 
 INSTALLED_APPS = [
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.sites',
-    'django.contrib.flatpages',
-
-    'djcelery',
-    
-    'hitcount',
-    'cacheback',
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.sites",
+    "django.contrib.flatpages",
+    "djcelery",
+    "hitcount",
+    "cacheback",
 ] + PROJECT_APPS
 
 MIDDLEWARE = [
-    'django.middleware.common.CommonMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    "django.middleware.common.CommonMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
 ]
 
 TEMPLATES = [
     {
-        'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [
-            os.path.join(PROJECT_ROOT, 'test_templates'),
+        "BACKEND": "django.template.backends.django.DjangoTemplates",
+        "DIRS": [
+            os.path.join(PROJECT_ROOT, "test_templates"),
         ],
-        'APP_DIRS': True,
+        "APP_DIRS": True,
     },
 ]
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': ':memory:'
-    }
-}
+DATABASES = {"default": {"ENGINE": "django.db.backends.sqlite3", "NAME": ":memory:"}}
 
 CACHES = {
-    'default': {
-        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
-        'LOCATION': 'unique-snowflake',
+    "default": {
+        "BACKEND": "django.core.cache.backends.locmem.LocMemCache",
+        "LOCATION": "unique-snowflake",
     }
 }
 
-ROOT_URLCONF = 'test_urls'
+ROOT_URLCONF = "test_urls"
 
 SITE_ID = 1
 
@@ -64,13 +58,13 @@ SITE_ID = 1
 ## Hitcount settings
 
 USE_HITCOUNT = True
-HITCOUNT_KEEP_HIT_ACTIVE = { 'hours': 24 }
+HITCOUNT_KEEP_HIT_ACTIVE = {"hours": 24}
 HITCOUNT_HITS_PER_IP_LIMIT = 0
 
 
 ## Cacheback settings
 
-CACHEBACK_TASK_QUEUE = 'celery'
+CACHEBACK_TASK_QUEUE = "celery"
 
 
 ## Celery settings
